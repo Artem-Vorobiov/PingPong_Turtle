@@ -9,6 +9,15 @@ import os
 # Set up the Screen
 def screen_here():
 	global wn
+	global score_1
+	global score_2
+	global pen
+
+	pen = turtle.Turtle()
+	pen.hideturtle()
+	score_1 = 0
+	score_2 = 0
+
 	wn = turtle.Screen()
 	wn.setup(width=0.7, height = 0.7)
 	wn.bgcolor('lightgreen')
@@ -47,17 +56,19 @@ class Target(turtle.Turtle):
 		self.penup()
 		self.goto(startx, starty)
 		self.speed(0)
-		self.setheading(random.randint(0, 350))
+		head = [random.randint(0, 45), random.randint(135, 180), random.randint(180, 225), random.randint(315, 360)]
+		self.setheading(random.choice(head))
 		self.status = 'ready'
 
 	def move(self):
-		self.fd(8)
+		self.fd(6)
 
 
 
 
 def boundary_checking(ship):
-	# print(wn.screensize()[1], '\t\t\t BALL {}'.format(ship.ycor()))
+	global score_1
+	global score_2
 
 	if ship.ycor() > wn.screensize()[1] - 10:
 		if ship.heading() > 90:
@@ -65,41 +76,39 @@ def boundary_checking(ship):
 		else:
 			ship.right(180 - 2*abs(90 - ship.heading()))
 
-
-
 	elif ship.ycor() < - wn.screensize()[1] + 10:
 		if ship.heading() > 90:
 			ship.right(180 + 2*abs(90 - ship.heading()))
 		else:
 			ship.right(180 - 2*abs(90 - ship.heading()))
 
-
-
 	if ship.xcor() > wn.screensize()[0] + 100:
-		if ship.heading() > 180:
-			ship.right(180 + 2*abs(180 - ship.heading()))
-		else:
-			ship.right(180 - 2*abs(180 - ship.heading()))
+		ship.goto(0,0)
+		time.sleep(2)
 
+		head = [random.randint(0, 45), random.randint(135, 180), random.randint(180, 225), random.randint(315, 360)]
+		ship.setheading(random.choice(head))
+
+		score_2 += 100
+		show_up_score(score_1, score_2)
 
 	if ship.xcor() < - wn.screensize()[0]-100:
-		if ship.heading() > 180:
-			ship.right(180 + 2*abs(180 - ship.heading()))
-		else:
-			ship.right(180 - 2*abs(180 - ship.heading()))
+		ship.goto(0,0)
+		time.sleep(1)
 
+		head = [random.randint(0, 45), random.randint(135, 180), random.randint(180, 225), random.randint(315, 360)]
+		ship.setheading(random.choice(head))
 
+		score_1 += 100
+		show_up_score(score_1, score_2)
 
 
 def if_collision(pl1, pl2, ball):
 	dis_1 = pl1.distance(ball.xcor(), ball.ycor())
 	dis_2 = pl2.distance(ball.xcor(), ball.ycor())
-	# print(dis_1)
 
 	if dis_1 <= 30.0 and ball.status == 'ready':
-		# print(ball.heading(), '\n')
 		ball.status = 'reflected'
-
 		if ball.heading() >= 90:
 			ball.right(180 + 2*abs(180 - ball.heading()))
 		else:
@@ -107,7 +116,6 @@ def if_collision(pl1, pl2, ball):
 		ball.color('black')
 
 	if dis_2 <= 30.0 and ball.status == 'ready':
-		# print(ball.heading(), '\n')
 		ball.status = 'reflected'
 
 		if ball.heading() >= 90:
@@ -118,6 +126,16 @@ def if_collision(pl1, pl2, ball):
 
 	if dis_1 > 100.0:
 		ball.status = 'ready'
+
+
+def show_up_score(score_1, score_2):
+	pen.undo()
+	pen.hideturtle()
+	pen.penup()
+	msg = 'Player 1: %s VS Player 2: %s' %(score_1,score_2)
+	# pen.goto(-(wn.screensize()[0])/2,(wn.screensize()[1])-20)
+	pen.goto(-wn.window_width()/2+10, wn.window_height()/2.2)
+	pen.write(msg, font=("Arial", 20, "normal"))
 
 
 
