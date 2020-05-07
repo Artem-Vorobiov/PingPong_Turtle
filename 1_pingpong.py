@@ -106,6 +106,7 @@ def boundary_checking(ship):
 def if_collision(pl1, pl2, ball):
 	dis_1 = pl1.distance(ball.xcor(), ball.ycor())
 	dis_2 = pl2.distance(ball.xcor(), ball.ycor())
+	print('\n\t\t DISTANCE = ' ,dis_1)
 
 	if dis_1 <= 30.0 and ball.status == 'ready':
 		ball.status = 'reflected'
@@ -159,6 +160,6 @@ while True:
 	ball.move()
 	boundary_checking(ball)
 	if_collision(player_1, player_2, ball)
-	print(ball.status)
+	# print(ball.status)
 
 time.sleep(5)
